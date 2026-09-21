@@ -32,32 +32,13 @@ def read_current_millis(epoch_ms: int) -> int:
 
 
 def decode_timestamp_ms(snowflake_id: int, epoch_ms: int = EPOCH_MS_DEFAULT) -> int:
-    """Read the timestamp field out of a Snowflake identifier.
+    default_time = snowflake_id >> 22
 
-    Args:
-        snowflake_id: An identifier produced against the same epoch.
-        epoch_ms: The epoch the identifier was generated against. Defaults to
-            the original Twitter epoch (2010-11-04 01:42:54.657 UTC).
 
-    Returns:
-        The absolute Unix time in milliseconds at which the identifier was
-        generated.
-    """
-    # TODO: реализуйте функцию
-    return 0
+    return default_time + epoch_ms
 
 
 def decode_node_id(snowflake_id: int) -> int:
-    """Read the node identifier field out of a Snowflake identifier.
-
-    Args:
-        snowflake_id: An identifier produced by :func:`generate_snowflake_id`.
-
-    Returns:
-        The node identifier packed into ``snowflake_id``, in the range
-        ``[0, NODE_ID_MAX]``.
-    """
-    # TODO: реализуйте функцию
     return 0
 
 
