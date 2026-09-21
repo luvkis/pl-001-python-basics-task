@@ -55,28 +55,20 @@ def generate_snowflake_id(
     node_id: int = NODE_ID_DEFAULT,
     epoch_ms: int = EPOCH_MS_DEFAULT,
 ) -> int | None:
-    """Build and return a Snowflake identifier for the current millisecond.
+    
+    if (node_id < 0 or node_id > NODE_ID_MAX):
+        print('node_id must be in range[0; 1023]')
+        return None
 
-    The function is stateless: the caller passes the per-millisecond sequence
-    counter explicitly. It is the caller's responsibility to increment
-    ``sequence_id`` for identifiers minted within the same millisecond and to
-    reset it once the clock advances.
+    
+    elif (sequence_id < 0 or sequence_id > SEQUENCE_ID_MAX):
+        print('sequence_id must be in [0; 4095]')
+        return None
 
-    Args:
-        sequence_id: The per-millisecond sequence counter, in the range
-            ``[0, SEQUENCE_ID_MAX]``.
-        node_id: The identifier of this node, in the range ``[0, NODE_ID_MAX]``.
-            Optional; defaults to ``NODE_ID_DEFAULT``.
-        epoch_ms: The start of the epoch as Unix milliseconds. Optional;
-            defaults to the original Twitter epoch (2010-11-04 01:42:54.657
-            UTC).
+    
+    elif (decode_timestamp_ms(epoch_ms) > TIMESTAMP_MS_MAX):
+        print('overflows')
+        return None
 
-    Returns:
-        The Snowflake identifier as a positive 63-bit integer, or ``None`` if
-        ``node_id`` is outside ``[0, NODE_ID_MAX]``, ``sequence_id`` is outside
-        ``[0, SEQUENCE_ID_MAX]``, or the elapsed time no longer fits in the
-        timestamp field (roughly 69 years after ``epoch_ms``). In each of those
-        cases an explanatory message is printed to stdout first.
-    """
-    # TODO: реализуйте функцию
-    return 0
+   
+    return read_current_millis(epoch_ms) << 22 | node_id << 12 | sequence_id
