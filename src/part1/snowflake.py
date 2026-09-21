@@ -45,17 +45,9 @@ def decode_node_id(snowflake_id: int) -> int:
 
 
 def decode_sequence_id(snowflake_id: int) -> int:
-    """Read the sequence counter field out of a Snowflake identifier.
+    sequence_id = snowflake_id & 0b111111111111
 
-    Args:
-        snowflake_id: An identifier produced by :func:`generate_snowflake_id`.
-
-    Returns:
-        The per-millisecond sequence counter packed into ``snowflake_id``, in
-        the range ``[0, SEQUENCE_ID_MAX]``.
-    """
-    # TODO: реализуйте функцию
-    return 0
+    return sequence_id
 
 
 def generate_snowflake_id(
