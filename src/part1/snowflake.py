@@ -39,7 +39,9 @@ def decode_timestamp_ms(snowflake_id: int, epoch_ms: int = EPOCH_MS_DEFAULT) -> 
 
 
 def decode_node_id(snowflake_id: int) -> int:
-    return 0
+    node_id = (snowflake_id >> 12) & 0b1111111111
+
+    return node_id
 
 
 def decode_sequence_id(snowflake_id: int) -> int:
