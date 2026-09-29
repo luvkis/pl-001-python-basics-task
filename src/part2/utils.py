@@ -11,19 +11,11 @@ from typing import Final
 
 
 # TODO: задайте число знаков после запятой и шаг квантования
-PRICE_PRECISION: Final[int] = 0
-PRICE_STEP: Final = Decimal(0)
+PRICE_PRECISION: Final[int] = 2
+PRICE_STEP: Final = Decimal(1).scaleb(-PRICE_PRECISION)
 
 
 def normalize_price(price: Decimal) -> Decimal:
-    """Round a price to the precision every stored record uses.
+    correct_price = price.quantize(PRICE_STEP, rounding=ROUND_HALF_UP)
 
-    Args:
-        price: The raw price amount.
-
-    Returns:
-        ``price`` quantised to :data:`PRICE_PRECISION` fractional digits,
-        with halves rounded up.
-    """
-    # TODO: реализуйте функцию
-    return Decimal(0)
+    return correct_price
