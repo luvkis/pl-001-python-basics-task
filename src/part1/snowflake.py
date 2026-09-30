@@ -6,6 +6,8 @@ from .constants import (
     NODE_ID_MAX,
     SEQUENCE_ID_MAX,
     TIMESTAMP_MS_MAX,
+    NODE_ID_BITS,
+    SEQUENCE_ID_BITS,
 )
 
 
@@ -16,19 +18,19 @@ def read_current_millis(epoch_ms: int) -> int:
 
 
 def decode_timestamp_ms(snowflake_id: int, epoch_ms: int = EPOCH_MS_DEFAULT) -> int:
-    default_time = snowflake_id >> 22
+    default_time = snowflake_id >> (NODE_ID_DEFAULT + SEQUENCE_ID_BITS)
 
     return default_time + epoch_ms
 
 
 def decode_node_id(snowflake_id: int) -> int:
-    node_id = (snowflake_id >> 12) & 0b1111111111
+    node_id = (snowflake_id >> 12) & NODE_ID_BITS
 
     return node_id
 
 
 def decode_sequence_id(snowflake_id: int) -> int:
-    sequence_id = snowflake_id & 0b111111111111
+    sequence_id = snowflake_id & SEQUENCE_ID_BITS
 
     return sequence_id
 
@@ -48,4 +50,4 @@ def generate_snowflake_id(
         print("overflows")
         return None
 
-    return read_current_millis(epoch_ms) << 22 | node_id << 12 | sequence_id
+    return read_current_millis(epoch_ms) << (NODE_ID_BITS + SEQUENCE_ID_BITS) | node_id << SEQUENCE_ID_BITS | sequence_id
