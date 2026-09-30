@@ -1,16 +1,7 @@
-"""Standalone helpers shared by the hw4 storage and CRUD modules.
-
-For now this is limited to money handling: :func:`normalize_price` rounds a
-raw :class:`~decimal.Decimal` amount to the fixed number of fractional
-digits (:data:`PRICE_PRECISION`) that every stored price uses, keeping
-currency values free of binary floating-point error.
-"""
-
-from decimal import ROUND_HALF_UP, Decimal  # noqa: F401
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Final
 
 
-# TODO: задайте число знаков после запятой и шаг квантования
 PRICE_PRECISION: Final[int] = 2
 PRICE_STEP: Final = Decimal(1).scaleb(-PRICE_PRECISION)
 

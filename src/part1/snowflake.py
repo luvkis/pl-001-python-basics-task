@@ -2,12 +2,12 @@ import time
 
 from .constants import (
     EPOCH_MS_DEFAULT,
+    NODE_ID_BITS,
     NODE_ID_DEFAULT,
     NODE_ID_MAX,
+    SEQUENCE_ID_BITS,
     SEQUENCE_ID_MAX,
     TIMESTAMP_MS_MAX,
-    NODE_ID_BITS,
-    SEQUENCE_ID_BITS,
 )
 
 
@@ -50,4 +50,8 @@ def generate_snowflake_id(
         print("overflows")
         return None
 
-    return read_current_millis(epoch_ms) << (NODE_ID_BITS + SEQUENCE_ID_BITS) | node_id << SEQUENCE_ID_BITS | sequence_id
+    return (
+        read_current_millis(epoch_ms) << (NODE_ID_BITS + SEQUENCE_ID_BITS)
+        | node_id << SEQUENCE_ID_BITS
+        | sequence_id
+    )

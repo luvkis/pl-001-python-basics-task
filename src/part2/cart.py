@@ -1,22 +1,11 @@
-"""Shopping-cart operations layered on top of the product store.
-
-The cart is a plain list of tuples, one :data:`CartLine` --
-``(product_id, quantity)`` -- per distinct product. Moving units between the
-store and the cart keeps the two sides in balance: :func:`add_to_cart` takes
-units out of stock, :func:`remove_from_cart` puts them back.
-
-Like the CRUD layer, the failure path never raises -- the operation prints
-an explanatory message to stdout and returns ``None``.
-"""
-
 from typing import Final
 
-from .crud import read_product, update_product  # noqa: F401
-from .storage import (  # noqa: F401
+from .crud import read_product, update_product
+from .storage import (
     NAME_INDEX,
     PRICE_INDEX,
-    QUANTITY_INDEX,
     PRODUCT_ID_INDEX,
+    QUANTITY_INDEX,
     Product,
 )
 
@@ -38,13 +27,14 @@ def add_to_cart(
     if product is None:
         return None
 
-    
     for i in range(len(storage)):
         product = storage[i]
         if product_id == product[PRODUCT_ID_INDEX]:
             quantity_storage = product[QUANTITY_INDEX]
             if quantity > quantity_storage:
-                print(f"not enough stock for product <{product_id}>: {quantity_storage} available, {quantity} requested")
+                print(
+                    f"not enough stock for product <{product_id}>: {quantity_storage} available, {quantity} requested"
+                )
                 return None
 
             name, price = product[NAME_INDEX], product[PRICE_INDEX]
@@ -54,13 +44,18 @@ def add_to_cart(
             for j in range(len(cart)):
                 cur_cart = cart[j]
                 if cur_cart[LINE_PRODUCT_ID_INDEX] == product_id:
-                    new_cart = (cur_cart[LINE_PRODUCT_ID_INDEX], cur_cart[LINE_QUANTITY_INDEX] + quantity)
+                    new_cart = (
+                        cur_cart[LINE_PRODUCT_ID_INDEX],
+                        cur_cart[LINE_QUANTITY_INDEX] + quantity,
+                    )
                     cart[j] = new_cart
                     return new_cart
 
             new_cart = (product_id, quantity)
             cart.append(new_cart)
             return new_cart
+
+    return None
 
 
 def remove_from_cart(
@@ -73,14 +68,20 @@ def remove_from_cart(
         id, quantity_cart = cart[i]
         if id == product_id:
             if quantity > quantity_cart:
-                print(f'cart holds only {quantity_cart} unit(s) of product <{product_id}>, cannot remove {quantity}')
+                print(
+                    f"cart holds only {quantity_cart} unit(s) of product <{product_id}>, cannot remove {quantity}"
+                )
                 return None
 
             product = read_product(storage, product_id)
             if product is None:
                 return None
 
-            new_product = (product[NAME_INDEX], product[PRICE_INDEX], product[QUANTITY_INDEX] + quantity)
+            new_product = (
+                product[NAME_INDEX],
+                product[PRICE_INDEX],
+                product[QUANTITY_INDEX] + quantity,
+            )
             update_product(storage, product_id, new_product)
 
             if quantity == quantity_cart:
@@ -91,9 +92,5 @@ def remove_from_cart(
 
             return cart[i]
 
-    print(f'product <{product_id}> is not in the cart')
+    print(f"product <{product_id}> is not in the cart")
     return None
-
-            
-
-            
