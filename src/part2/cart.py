@@ -58,12 +58,29 @@ def add_to_cart(
     return None
 
 
+def find_cart_line(
+    cart: list[CartLine],
+    product_id: int,
+) -> CartLine | None:
+    for product in cart:
+        if product_id == product[LINE_PRODUCT_ID_INDEX]:
+            return product
+
+    return None
+
+
 def remove_from_cart(
     storage: list[Product],
     cart: list[CartLine],
     product_id: int,
     quantity: int,
 ) -> CartLine | None:
+    cart_line = find_cart_line(cart, product_id)
+
+    if cart_line is None:
+        print(f"product <{product_id}> is not in the cart")
+        return None
+
     for i in range(len(cart)):
         id, quantity_cart = cart[i]
         if id == product_id:
@@ -92,5 +109,4 @@ def remove_from_cart(
 
             return cart[i]
 
-    print(f"product <{product_id}> is not in the cart")
     return None
