@@ -40,25 +40,25 @@ def generate_product_id(storage: list[Product]) -> int:
 def create_product(
     storage: list[Product], fields: tuple[str, Decimal, int]
 ) -> int | None:
-    """Append a new product to ``storage`` and return its new identifier.
+    correct_name = normalize_product_name(fields[0])
 
-    Args:
-        storage: The product store to append to; modified in place on
-            success.
-        fields: A ``(name, price, quantity)`` tuple describing the product.
-            ``name`` is normalised (surrounding whitespace stripped,
-            lower-cased) before it is stored or compared. ``price`` is a
-            :class:`~decimal.Decimal` amount and is rounded to the stored
-            money precision before it is saved.
+    if correct_name == '':
+        print("product name must not be blank")
+        return None
 
-    Returns:
-        The identifier generated for the new product, or ``None`` when
-        ``name`` is blank once normalised or a product with the same
-        normalised name already exists. In the ``None`` case ``storage``
-        is left unchanged and an explanatory message is printed.
-    """
-    # TODO: реализуйте функцию
-    return 0
+    for product in storage:
+        if product[NAME_INDEX] == correct_name:
+            print(f"product name '{correct_name}' is already taken")
+            return None
+    
+    product_id = generate_product_id(storage)
+    name, price, quantity = fields
+    new_product = (product_id, correct_name, normalize_price(price), quantity)
+    
+    storage.append(new_product)
+    
+    return product_id
+    
 
 
 def read_product(storage: list[Product], product_id: int) -> Product | None:
@@ -75,29 +75,31 @@ def update_product(
     product_id: int,
     fields: tuple[str, Decimal, int],
 ) -> Product | None:
-    """Overwrite the fields of the product stored under ``product_id``.
+   correct_name = normalize_product_name(fields[0])
 
-    The identifier itself is preserved; only ``name``, ``price`` and
-    ``quantity`` are replaced.
+   if correct_name == '':
+       print("product name must not be blank")
+       return None
+   
 
-    Args:
-        storage: The product store to modify; the matching record is
-            replaced in place on success.
-        product_id: The identifier of the product to change.
-        fields: A ``(name, price, quantity)`` tuple with the new values.
-            ``price`` is a :class:`~decimal.Decimal` amount and is rounded
-            to the stored money precision before it is saved.
+   for product in storage: 
+       if product[NAME_INDEX] == correct_name and product_id != product[PRODUCT_ID_INDEX]:
+           print(f"product name '{correct_name}' is already taken")
+           return None
 
-    Returns:
-        The updated ``(product_id, name, price, quantity)`` record, or
-        ``None`` when ``name`` is blank once normalised, no product
-        carries that identifier, or the normalised name is already taken
-        by another product. In every ``None`` case ``storage`` is left
-        unchanged and an explanatory message is printed. Renaming a
-        product to its own current name is allowed.
-    """
-    # TODO: реализуйте функцию
-    return (0, "", Decimal(0), 0)
+   for i in range(len(storage)): 
+       product = storage[i]
+       if product_id == product[PRODUCT_ID_INDEX]:
+           new_product = (product_id, correct_name, normalize_price(fields[1]), fields[2])
+           storage[i] = new_product
+
+           return new_product
+
+   print(f"no product with id <{product_id}>")
+   return None   
+       
+   
+
 
 
 def delete_product(storage: list[Product], product_id: int) -> int | None:
