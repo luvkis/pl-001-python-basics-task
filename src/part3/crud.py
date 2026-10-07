@@ -30,18 +30,11 @@ from .utils import normalize_price, normalize_product_name  # noqa: F401
 
 
 def generate_product_id(storage: list[Product]) -> int:
-    """Choose the identifier for the next product added to ``storage``.
+    if len(storage) == 0:
+        return PRODUCT_ID_MIN
+    mx = max(product[PRODUCT_ID_INDEX] for product in storage) + 1
 
-    Args:
-        storage: The product store to inspect.
-
-    Returns:
-        One past the greatest identifier currently held in ``storage``, or
-        :data:`~src.part3.storage.PRODUCT_ID_MIN` when ``storage`` is
-        empty.
-    """
-    # TODO: реализуйте функцию (используйте своё решение части 2)
-    return 0
+    return mx
 
 
 def create_product(
@@ -69,19 +62,12 @@ def create_product(
 
 
 def read_product(storage: list[Product], product_id: int) -> Product | None:
-    """Return the product stored under ``product_id``.
+    for product in storage:
+        if product[PRODUCT_ID_INDEX] == product_id:
+            return product
 
-    Args:
-        storage: The product store to search.
-        product_id: The identifier to look up.
-
-    Returns:
-        The matching ``(product_id, name, price, quantity)`` record, or
-        ``None`` when no product carries that identifier (a message is
-        printed in that case).
-    """
-    # TODO: реализуйте функцию (используйте своё решение части 2)
-    return (0, "", Decimal(0), 0)
+    print(f"no product with id <{product_id}>")
+    return None
 
 
 def update_product(
@@ -115,17 +101,11 @@ def update_product(
 
 
 def delete_product(storage: list[Product], product_id: int) -> int | None:
-    """Remove the product stored under ``product_id`` from ``storage``.
+    for product in storage:
+        if product[PRODUCT_ID_INDEX] == product_id:
+            storage.remove(product)
+            return product_id
 
-    Args:
-        storage: The product store to remove from; modified in place on
-            success.
-        product_id: The identifier of the product to remove.
+    print(f"no product with id <{product_id}>")
+    return None
 
-    Returns:
-        ``product_id`` when a product was removed, or ``None`` when no
-        product carried that identifier (``storage`` is left unchanged and
-        a message is printed).
-    """
-    # TODO: реализуйте функцию (используйте своё решение части 2)
-    return 0
