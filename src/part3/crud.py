@@ -75,9 +75,18 @@ def update_product(
     fields: tuple[str, Decimal, int],
 ) -> Product | None:
     correct_name = normalize_product_name(fields[0])
-
+    flag = False
     if correct_name == "":
         print("product name must not be blank")
+        return None
+
+    for i in range(len(storage)):
+        product = storage[i]
+        if product_id == product[PRODUCT_ID_INDEX]:
+            flag = True
+
+    if not flag:
+        print(f"no product with id <{product_id}>")
         return None
 
     for product in storage:
