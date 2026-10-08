@@ -20,13 +20,13 @@ product.
 
 from decimal import Decimal
 
-from .storage import (  # noqa: F401
+from .storage import (
     NAME_INDEX,
     PRODUCT_ID_INDEX,
     PRODUCT_ID_MIN,
     Product,
 )
-from .utils import normalize_price, normalize_product_name  # noqa: F401
+from .utils import normalize_price, normalize_product_name
 
 
 def generate_product_id(storage: list[Product]) -> int:
@@ -42,7 +42,7 @@ def create_product(
 ) -> int | None:
     correct_name = normalize_product_name(fields[0])
 
-    if correct_name == '':
+    if correct_name == "":
         print("product name must not be blank")
         return None
 
@@ -50,15 +50,14 @@ def create_product(
         if product[NAME_INDEX] == correct_name:
             print(f"product name '{correct_name}' is already taken")
             return None
-    
+
     product_id = generate_product_id(storage)
-    name, price, quantity = fields
+    _, price, quantity = fields
     new_product = (product_id, correct_name, normalize_price(price), quantity)
-    
+
     storage.append(new_product)
-    
+
     return product_id
-    
 
 
 def read_product(storage: list[Product], product_id: int) -> Product | None:
@@ -75,31 +74,35 @@ def update_product(
     product_id: int,
     fields: tuple[str, Decimal, int],
 ) -> Product | None:
-   correct_name = normalize_product_name(fields[0])
+    correct_name = normalize_product_name(fields[0])
 
-   if correct_name == '':
-       print("product name must not be blank")
-       return None
-   
+    if correct_name == "":
+        print("product name must not be blank")
+        return None
 
-   for product in storage: 
-       if product[NAME_INDEX] == correct_name and product_id != product[PRODUCT_ID_INDEX]:
-           print(f"product name '{correct_name}' is already taken")
-           return None
+    for product in storage:
+        if (
+            product[NAME_INDEX] == correct_name
+            and product_id != product[PRODUCT_ID_INDEX]
+        ):
+            print(f"product name '{correct_name}' is already taken")
+            return None
 
-   for i in range(len(storage)): 
-       product = storage[i]
-       if product_id == product[PRODUCT_ID_INDEX]:
-           new_product = (product_id, correct_name, normalize_price(fields[1]), fields[2])
-           storage[i] = new_product
+    for i in range(len(storage)):
+        product = storage[i]
+        if product_id == product[PRODUCT_ID_INDEX]:
+            new_product = (
+                product_id,
+                correct_name,
+                normalize_price(fields[1]),
+                fields[2],
+            )
+            storage[i] = new_product
 
-           return new_product
+            return new_product
 
-   print(f"no product with id <{product_id}>")
-   return None   
-       
-   
-
+    print(f"no product with id <{product_id}>")
+    return None
 
 
 def delete_product(storage: list[Product], product_id: int) -> int | None:
@@ -110,4 +113,3 @@ def delete_product(storage: list[Product], product_id: int) -> int | None:
 
     print(f"no product with id <{product_id}>")
     return None
-

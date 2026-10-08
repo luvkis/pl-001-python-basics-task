@@ -18,15 +18,15 @@ Presentation:
   the longest value it holds in that particular call.
 """
 
-from decimal import ROUND_HALF_UP, Decimal  # noqa: F401
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Final
 
-from .storage import Product
 from .storage import (
-    PRODUCT_ID_INDEX,
     NAME_INDEX,
     PRICE_INDEX,
+    PRODUCT_ID_INDEX,
     QUANTITY_INDEX,
+    Product,
 )
 
 
@@ -54,7 +54,6 @@ def normalize_product_name(name: str) -> str:
     correct_name = [word.lower() for word in name.split()]
 
     return " ".join(correct_name)
-    
 
 
 # TODO: при необходимости добавьте свои вспомогательные функции
@@ -81,11 +80,13 @@ def get_storage_str_representation(storage: list[Product]) -> str:
             max(len_headers[3], len_quantity),
         ]
 
-    s = (f"| ID {' ' * (len_headers[0] - 2)}| name {' ' * (len_headers[1] - 4)}| price {' ' * (len_headers[2] - 5)}| quantity {' ' * (len_headers[3] - 8)}|\n"
-    f"|{'-' * (len_headers[0] + 2)}|{'-' * (len_headers[1] + 2)}|{'-' * (len_headers[2] + 2)}|{'-' * (len_headers[3] + 2)}|")
+    s = (
+        f"| ID {' ' * (len_headers[0] - 2)}| name {' ' * (len_headers[1] - 4)}| price {' ' * (len_headers[2] - 5)}| quantity {' ' * (len_headers[3] - 8)}|\n"
+        f"|{'-' * (len_headers[0] + 2)}|{'-' * (len_headers[1] + 2)}|{'-' * (len_headers[2] + 2)}|{'-' * (len_headers[3] + 2)}|"
+    )
 
     for product in storage:
-        s += '\n'
+        s += "\n"
 
         len_id = len(str(product[PRODUCT_ID_INDEX]))
         len_name = len(str(product[NAME_INDEX]))
@@ -93,5 +94,5 @@ def get_storage_str_representation(storage: list[Product]) -> str:
         len_quantity = len(str(product[QUANTITY_INDEX]))
 
         s += f"| {product[PRODUCT_ID_INDEX]} {' ' * (len_headers[0] - len_id)}| {product[NAME_INDEX]} {' ' * (len_headers[1] - len_name)}| {product[PRICE_INDEX]} {' ' * (len_headers[2] - len_price)}| {product[QUANTITY_INDEX]} {' ' * (len_headers[3] - len_quantity)}|"
-        
+
     return s
