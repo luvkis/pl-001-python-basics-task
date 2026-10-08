@@ -94,8 +94,4 @@ def get_storage_str_representation(storage: list[Product]) -> str:
 
         s += f"| {product[PRODUCT_ID_INDEX]} {' ' * (len_headers[0] - len_id)}| {product[NAME_INDEX]} {' ' * (len_headers[1] - len_name)}| {product[PRICE_INDEX]} {' ' * (len_headers[2] - len_price)}| {product[QUANTITY_INDEX]} {' ' * (len_headers[3] - len_quantity)}|"
         
-
-
-
-
     return s
